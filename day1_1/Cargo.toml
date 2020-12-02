@@ -1,5 +1,5 @@
 [package]
-name = "day1"
+name = "day1_1"
 version = "0.1.0"
 authors = ["muvlon"]
 edition = "2018"
