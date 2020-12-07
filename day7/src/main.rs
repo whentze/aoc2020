@@ -7,10 +7,12 @@ use nom::{
     sequence::{separated_pair, terminated, tuple},
     IResult,
 };
-use petgraph::{graphmap::DiGraphMap, visit::{depth_first_search, Dfs, DfsEvent, Reversed, Walker}};
+use petgraph::{
+    graphmap::DiGraphMap,
+    visit::{Dfs, Reversed, Walker},
+};
 use std::{
     cell::RefCell,
-    collections::HashMap,
     error::Error,
     fmt::{self, Display},
     io::{stdin, BufRead},
@@ -98,14 +100,23 @@ fn main() -> Result<(), Box<dyn Error>> {
         let graph = Reversed(&graph);
         let res = Dfs::new(graph, target_bag).iter(graph).count();
 
-        println!("bags that transitively contain shiny gold: {}", res - 1 /* shiny gold itself not counted*/);
+        println!(
+            "bags that transitively contain shiny gold: {}",
+            res - 1 /* shiny gold itself not counted*/
+        );
     }
 
     fn transitive_children(graph: &DiGraphMap<BagName, u32>, node: BagName) -> u32 {
-        graph.edges(node).map(|(_, next, n)| n * (1 +  transitive_children(graph, next))).sum::<u32>()
+        graph
+            .edges(node)
+            .map(|(_, next, n)| n * (1 + transitive_children(graph, next)))
+            .sum::<u32>()
     }
 
-    println!("number of bags transitively inside a shiny gold: {}", transitive_children(&graph, target_bag));
+    println!(
+        "number of bags transitively inside a shiny gold: {}",
+        transitive_children(&graph, target_bag)
+    );
 
     Ok(())
 }
