@@ -101,7 +101,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         let res = Dfs::new(graph, target_bag).iter(graph).count();
 
         println!(
-            "bags that transitively contain shiny gold: {}",
+            "bags that transitively contain {}: {}",
+            target_bag,
             res - 1 /* shiny gold itself not counted*/
         );
     }
@@ -114,7 +115,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     println!(
-        "number of bags transitively inside a shiny gold: {}",
+        "number of bags transitively inside a {}: {}",
+        target_bag,
         transitive_children(&graph, target_bag)
     );
 
