@@ -1,3 +1,4 @@
+use anyhow::{anyhow, Result};
 use nom::{
     branch::alt,
     bytes::complete::tag,
@@ -13,11 +14,9 @@ use petgraph::{
 };
 use std::{
     cell::RefCell,
-    error::Error,
     fmt::{self, Display},
     io::{stdin, BufRead},
     str::FromStr,
-    string::ToString,
 };
 use string_interner::{DefaultSymbol, StringInterner};
 
@@ -80,14 +79,16 @@ fn rule(input: &str) -> IResult<&str, Rule> {
     )(input)
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<()> {
     let stdin = stdin();
     let stdin = stdin.lock();
 
     let mut graph = DiGraphMap::new();
     for line in stdin.lines() {
         let line = line?;
-        let rule = rule(&line).map_err(|e| e.to_string())?.1;
+        let rule = rule(&line)
+            .map_err(|e| anyhow!("Error parsing rule: {}", e))?
+            .1;
 
         for (n, bag_name) in rule.elements {
             graph.add_edge(rule.bag_name, bag_name, n);
