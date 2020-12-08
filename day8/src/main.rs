@@ -67,12 +67,11 @@ impl Machine {
                 Instruction { op: Acc, imm, .. } => self.acc += imm,
                 _ => (),
             };
-            let pc_offset = match self.code[self.pc] {
-                Instruction { op: Jmp, imm, .. } => imm as isize,
-                _ => 1,
-            };
             self.code[self.pc].reached = true;
-            self.pc = (self.pc as isize + pc_offset) as usize;
+            self.pc = match self.code[self.pc] {
+                Instruction { op: Jmp, imm, .. } => (self.pc as isize + imm as isize) as usize,
+                _ => self.pc + 1,
+            };
             if self.pc == self.code.len() {
                 break
             }
