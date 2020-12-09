@@ -33,15 +33,22 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("part 1: {}", part1);
 
-    let part2 = input.iter().enumerate().map(|(i, _)| {
-        input.iter().enumerate().skip(i).find_map(|(j, _)| {
-            if input[i..=j].iter().sum::<u64>() == part1 {
-                Some(input[i..=j].iter().min().unwrap() + input[i..=j].iter().max().unwrap())
-            } else {
-                None
-            }
+    let part2 = (0..input.len())
+        .map(|i| {
+            (i..input.len())
+                .map(|j| &input[i..=j])
+                .take_while(|s| s.iter().sum::<u64>() <= part1)
+                .find_map(|s| {
+                    if s.iter().sum::<u64>() == part1 {
+                        Some(s.iter().min().unwrap() + s.iter().max().unwrap())
+                    } else {
+                        None
+                    }
+                })
         })
-    }).flatten().next().ok_or("No result in part 2 :(")?;
+        .flatten()
+        .next()
+        .ok_or("No result in part 2 :(")?;
 
     println!("part 2: {}", part2);
 
