@@ -37,10 +37,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|i| {
             (i..input.len())
                 .map(|j| &input[i..=j])
-                .take_while(|s| s.iter().sum::<u64>() <= part1)
-                .find_map(|s| {
-                    if s.iter().sum::<u64>() == part1 {
-                        Some(s.iter().min().unwrap() + s.iter().max().unwrap())
+                .map(|slice| (slice, slice.iter().sum::<u64>()))
+                .take_while(|(_, sum)| *sum <= part1)
+                .find_map(|(slice, sum)| {
+                    if sum == part1 {
+                        Some(slice.iter().min().unwrap() + slice.iter().max().unwrap())
                     } else {
                         None
                     }
