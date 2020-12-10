@@ -1,0 +1,5 @@
+[package]
+name = "day10"
+version = "0.1.0"
+authors = ["muvlon <muvlon@hentzes.de>"]
+edition = "2018"
