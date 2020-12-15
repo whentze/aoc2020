@@ -42,7 +42,11 @@ fn game(starting_numbers: &[u32], num_turns: u32) -> u32 {
 }
 
 fn main() {
-    let input = &include!("../input.txt");
+    let input = &include_str!("../input.txt")
+        .trim_end()
+        .split(',')
+        .map(|n| n.parse().unwrap())
+        .collect::<Vec<u32>>();
 
     println!("part 1: {}", game(input, 2020));
     println!("part 2: {}", game(input, 30_000_000));
